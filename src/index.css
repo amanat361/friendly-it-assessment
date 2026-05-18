@@ -1,40 +1,52 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Northwind Goods — design tokens.
-   Earthy two-anchor palette: warm clay (primary) + olive (accent).
-   Every component is expected to build from these tokens.
+   Northwind Goods — editorial craft-boutique system.
+   Warm paper, clay + olive earth tones. Fraunces display, Hanken Grotesk text.
+   Two anchors only; every surface builds from these tokens.
 --------------------------------------------------------------------------- */
 @theme {
-  --color-background: hsl(40 30% 96%);
-  --color-foreground: hsl(28 20% 17%);
+  --color-background: hsl(39 38% 95%);
+  --color-foreground: hsl(25 25% 15%);
 
-  --color-card: hsl(42 40% 99%);
-  --color-card-foreground: hsl(28 20% 17%);
+  --color-card: hsl(42 50% 98%);
+  --color-card-foreground: hsl(25 25% 15%);
 
-  --color-muted: hsl(38 22% 91%);
-  --color-muted-foreground: hsl(30 10% 42%);
+  /* sunken / inset surface — used instead of dividers */
+  --color-sunken: hsl(38 28% 92%);
 
-  --color-border: hsl(34 18% 85%);
-  --color-input: hsl(34 18% 80%);
-  --color-ring: hsl(20 40% 40%);
+  --color-muted: hsl(38 24% 90%);
+  --color-muted-foreground: hsl(28 12% 42%);
 
-  --color-primary: hsl(19 38% 37%);
-  --color-primary-foreground: hsl(40 40% 97%);
+  --color-border: hsl(34 22% 84%);
+  --color-input: hsl(34 20% 78%);
+  --color-ring: hsl(14 45% 42%);
 
-  --color-accent: hsl(74 20% 36%);
-  --color-accent-foreground: hsl(60 30% 97%);
+  --color-primary: hsl(14 44% 40%);
+  --color-primary-foreground: hsl(40 45% 97%);
 
-  --color-success: hsl(96 32% 32%);
+  --color-accent: hsl(70 22% 33%);
+  --color-accent-foreground: hsl(58 32% 97%);
+
+  --color-success: hsl(96 30% 29%);
   --color-success-foreground: hsl(90 40% 97%);
 
-  --color-warning: hsl(33 78% 55%);
-  --color-warning-foreground: hsl(28 40% 16%);
+  --color-warning: hsl(33 70% 50%);
+  --color-warning-foreground: hsl(28 40% 14%);
 
-  --color-destructive: hsl(8 58% 45%);
+  --color-destructive: hsl(8 52% 43%);
   --color-destructive-foreground: hsl(20 40% 97%);
 
-  --radius: 0.625rem;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  --radius: 0.75rem;
+
+  /* warm, soft, two-part depth — never harsh */
+  --shadow-soft: 0 1px 2px hsl(25 25% 15% / 0.04),
+    0 8px 24px -12px hsl(25 25% 15% / 0.14);
+  --shadow-lift: 0 1px 2px hsl(25 25% 15% / 0.05),
+    0 18px 40px -16px hsl(25 25% 15% / 0.2);
 }
 
 html,
@@ -47,8 +59,49 @@ body {
   margin: 0;
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01";
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+
+  /* faint paper grain — atmosphere, not noise */
+  background-image: radial-gradient(
+      hsl(25 25% 15% / 0.022) 0.5px,
+      transparent 0.5px
+    );
+  background-size: 4px 4px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+.shadow-lift {
+  box-shadow: var(--shadow-lift);
+}
+
+/* one orchestrated page-load reveal; respects reduced motion */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reveal {
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
 }

@@ -1,27 +1,66 @@
+import { useState } from "react";
+import { Lock } from "lucide-react";
+import { money } from "../../lib/format";
+import { useCart } from "../../lib/cart";
+
 export default function PlaceOrderActions() {
+  const { total } = useCart();
+  const [agreed, setAgreed] = useState(false);
+
   return (
-    <div className="rounded-lg border border-border bg-card p-6">
-      <div className="mb-5 flex items-start gap-2">
-        <input type="checkbox" className="mt-1 scale-75" />
-        <span className="text-xs text-stone-400">
-          I agree to the Terms of Service and Privacy Policy
+    <div>
+      <label
+        htmlFor="terms"
+        className="mb-5 flex cursor-pointer items-start gap-3 text-sm text-foreground"
+      >
+        <input
+          id="terms"
+          type="checkbox"
+          checked={agreed}
+          onChange={(e) => setAgreed(e.target.checked)}
+          className="mt-0.5 size-4 shrink-0 accent-[var(--color-primary)]"
+        />
+        <span>
+          I agree to the{" "}
+          <a className="text-primary underline underline-offset-2" href="#">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a className="text-primary underline underline-offset-2" href="#">
+            Privacy Policy
+          </a>
+          .
         </span>
-      </div>
+      </label>
 
-      <div className="flex gap-3">
-        <button className="rounded-md bg-stone-900 px-6 py-3 font-medium text-stone-700">
-          Submit
-        </button>
-        <button className="rounded-md bg-stone-900 px-6 py-3 font-medium text-stone-100">
+      <button
+        type="button"
+        disabled={!agreed}
+        className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-medium text-primary-foreground transition-[filter,opacity] hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+      >
+        <Lock className="size-4" />
+        Place order · {money(total)}
+      </button>
+
+      <div className="mt-3 flex items-center justify-center gap-4 text-sm">
+        <a
+          href="#"
+          className="text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+        >
           Back to cart
-        </button>
-        <button className="rounded-md bg-gradient-to-r from-indigo-500 to-purple-500 px-6 py-3 font-medium text-white">
+        </a>
+        <span className="text-border">·</span>
+        <a
+          href="#"
+          className="text-muted-foreground underline-offset-2 hover:text-foreground hover:underline"
+        >
           Save for later
-        </button>
+        </a>
       </div>
 
-      <p className="mt-5 text-xs text-stone-400">
-        By placing this order you acknowledge that all sales are final — refunds are issued solely at the discretion of Northwind Goods — and that your information may be shared with our trusted partners for marketing purposes.
+      <p className="mx-auto mt-5 max-w-[48ch] text-center text-xs leading-relaxed text-muted-foreground">
+        All sales are final. Refunds are at the discretion of Northwind Goods.
+        We never sell your information.
       </p>
     </div>
   );

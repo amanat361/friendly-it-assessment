@@ -1,67 +1,86 @@
-import { useState } from "react";
+import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { money } from "../../lib/format";
+import { useCart } from "../../lib/cart";
 
-const items = [
-  {
-    id: 1,
-    name: "Maple Cutting Board",
-    img: "https://images.unsplash.com/photo-1594224457860-02f4f2b1f9b6?w=300&q=80",
-    color: "Natural",
-    size: 'Large (18")',
-    qty: 1,
-    price: 64,
-    stock: 8,
-  },
-  {
-    id: 2,
-    name: "Stoneware Mug Set",
-    img: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=300&q=80",
-    color: "Clay",
-    size: "Set of 4",
-    qty: 2,
-    price: 38,
-    stock: 12,
-  },
-];
+const iconBtn =
+  "flex size-7 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card";
 
 export default function CartLineItem() {
-  const [qtys, setQtys] = useState<Record<number, number>>({ 1: 1, 2: 2 });
+  const { items, qty, setQty, remove } = useCart();
+
+  if (items.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-card px-6 py-14 text-center shadow-soft">
+        <ShoppingBag className="size-7 text-muted-foreground" />
+        <p className="font-medium text-foreground">Your cart is empty</p>
+        <p className="text-sm text-muted-foreground">
+          Add something you&rsquo;ll keep for years.
+        </p>
+      </div>
+    );
+  }
 
   return (
-    <div className="rounded-lg border border-border bg-card">
-      {items.map((item) => (
+    <div className="overflow-hidden rounded-xl border border-border bg-card shadow-soft">
+      {items.map((item, i) => (
         <div
           key={item.id}
-          className="flex gap-5 border-b border-border p-5 transition-transform last:border-b-0 hover:-translate-y-1 hover:bg-gray-100"
+          className={
+            "flex gap-5 p-5 " + (i > 0 ? "border-t border-border/70" : "")
+          }
         >
           <img
             src={item.img}
             alt={item.name}
-            className="h-28 w-28 shrink-0 rounded-xl object-cover"
+            width={96}
+            height={96}
+            loading="lazy"
+            className="size-24 shrink-0 rounded-lg object-cover"
           />
 
-          <div className="flex flex-1 flex-col gap-1">
-            <p className="text-foreground">{item.name}</p>
-            <p className="text-foreground">Color: {item.color}</p>
-            <p className="text-foreground">Size: {item.size}</p>
-            <p className="text-foreground">In stock: {item.stock}</p>
+          <div className="flex flex-1 flex-col">
+            <p className="font-medium text-foreground">{item.name}</p>
+            <p className="text-sm text-muted-foreground">{item.variant}</p>
+            <p className="mt-0.5 text-sm text-muted-foreground">
+              {item.stock} left in stock
+            </p>
 
-            <div className="mt-2 flex items-center gap-3">
-              <span className="text-foreground">Qty:</span>
-              <input
-                type="number"
-                min={1}
-                value={qtys[item.id]}
-                onChange={(e) =>
-                  setQtys((q) => ({ ...q, [item.id]: Number(e.target.value) }))
-                }
-                className="w-16 rounded border border-input px-2 py-1"
-              />
+            <div className="mt-auto flex items-center gap-1.5 pt-3">
+              <button
+                type="button"
+                onClick={() => setQty(item.id, (qty[item.id] ?? 1) - 1)}
+                aria-label={`Decrease quantity of ${item.name}`}
+                className={iconBtn}
+              >
+                <Minus className="size-3.5" />
+              </button>
+              <span className="w-8 text-center text-sm tabular-nums">
+                {qty[item.id] ?? 1}
+              </span>
+              <button
+                type="button"
+                onClick={() => setQty(item.id, (qty[item.id] ?? 1) + 1)}
+                aria-label={`Increase quantity of ${item.name}`}
+                className={iconBtn}
+              >
+                <Plus className="size-3.5" />
+              </button>
             </div>
           </div>
 
           <div className="flex flex-col items-end justify-between">
-            <p className="text-foreground">Price: ${item.price}</p>
-            <button className="text-sm text-blue-600 underline">Remove</button>
+            <p className="font-medium tabular-nums text-foreground">
+              {money(item.price * (qty[item.id] ?? 1))}
+            </p>
+            <button
+              type="button"
+              onClick={() => remove(item.id)}
+              aria-label={`Remove ${item.name}`}
+              title="Remove"
+              className="flex size-8 items-center justify-center rounded-md border border-border bg-card text-muted-foreground transition-colors hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            >
+              <Trash2 className="size-4" />
+            </button>
           </div>
         </div>
       ))}

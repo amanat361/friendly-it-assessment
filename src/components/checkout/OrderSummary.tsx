@@ -1,40 +1,48 @@
-const rows = [
-  { label: "Subtotal", value: "$140.00" },
-  { label: "Shipping", value: "$9.00" },
-  { label: "Estimated tax", value: "$12.83" },
-  { label: "Discount (SPRING)", value: "-$14.00", discount: true },
-];
+import { money } from "../../lib/format";
+import { useCart } from "../../lib/cart";
+import PromoCode from "./PromoCode";
 
 export default function OrderSummary() {
-  return (
-    <div className="rounded-lg border border-border bg-card p-6">
-      <h3 className="mb-4 text-foreground">Order summary</h3>
+  const { subtotal, shippingCost, tax, discount, total } = useCart();
 
-      <div>
+  const rows = [
+    { label: "Subtotal", value: subtotal },
+    { label: "Shipping", value: shippingCost },
+    { label: "Estimated tax", value: tax },
+    { label: "Discount · SPRING", value: discount, positive: true },
+  ];
+
+  return (
+    <div>
+      <h2 className="mb-5 text-xs font-medium uppercase tracking-widest text-muted-foreground">
+        Order summary
+      </h2>
+
+      <dl className="space-y-3">
         {rows.map((r) => (
-          <div
-            key={r.label}
-            className="grid grid-cols-2 gap-2 border-b border-border py-3"
-          >
-            <span className="text-foreground">{r.label}</span>
-            <span
+          <div key={r.label} className="flex items-baseline justify-between">
+            <dt className="text-sm text-muted-foreground">{r.label}</dt>
+            <dd
               className={
-                r.discount ? "text-left text-green-600" : "text-left text-foreground"
+                "tabular-nums " +
+                (r.positive ? "text-success" : "text-foreground")
               }
             >
-              {r.value}
-            </span>
+              {r.value < 0 ? `−${money(-r.value)}` : money(r.value)}
+            </dd>
           </div>
         ))}
+      </dl>
 
-        <div className="grid grid-cols-2 gap-2 border-b border-border py-3">
-          <span className="font-bold text-foreground">Order total</span>
-          <span className="text-left font-bold text-foreground">$147.83</span>
-        </div>
+      <div className="mt-4 border-t border-border pt-4">
+        <PromoCode />
       </div>
 
-      <div className="mt-4 inline-block rounded bg-green-500/10 px-3 py-1 text-sm text-green-700/60">
-        You saved $14.00 with code SPRING
+      <div className="mt-4 flex items-baseline justify-between border-t border-border pt-5">
+        <span className="text-sm text-muted-foreground">Total</span>
+        <span className="font-display text-3xl tabular-nums text-foreground">
+          {money(total)}
+        </span>
       </div>
     </div>
   );

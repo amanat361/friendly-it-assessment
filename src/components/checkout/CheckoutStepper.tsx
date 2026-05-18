@@ -1,44 +1,85 @@
+import { Check } from "lucide-react";
+
 const steps = [
-  { label: "Cart", done: true },
-  { label: "Shipping", active: true },
-  { label: "Payment" },
-  { label: "Review" },
-];
+  { label: "Cart", state: "done" },
+  { label: "Shipping", state: "active" },
+  { label: "Payment", state: "upcoming" },
+  { label: "Review", state: "upcoming" },
+] as const;
+
+const activeIndex = steps.findIndex((s) => s.state === "active");
 
 export default function CheckoutStepper() {
   return (
-    <div className="rounded-lg border border-border bg-card p-6">
-      <div className="flex items-center justify-center gap-4">
-        {steps.map((s, i) => (
-          <div key={s.label} className="flex items-center gap-4">
-            <div className="flex flex-col items-center gap-2 text-center">
-              <div
-                className={
-                  "flex h-9 w-9 items-center justify-center rounded-full text-lg " +
-                  (s.active
-                    ? "bg-blue-500/10 text-blue-600"
-                    : s.done
-                      ? "text-blue-600"
-                      : "text-stone-400")
-                }
-              >
-                {s.done ? "✓" : i + 1}
-              </div>
-              <span
-                className={
-                  "text-sm " +
-                  (s.active ? "font-bold text-foreground" : "text-stone-400")
-                }
-              >
-                {s.label}
-              </span>
-            </div>
-            {i < steps.length - 1 && (
-              <div className="h-0.5 w-16 bg-blue-500" />
-            )}
-          </div>
-        ))}
+    <nav aria-label="Checkout progress">
+      {/* Compact, for small screens */}
+      <div className="sm:hidden">
+        <div className="mb-2 flex items-baseline justify-between">
+          <span className="text-sm font-medium text-foreground">
+            {steps[activeIndex].label}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            Step {activeIndex + 1} of {steps.length}
+          </span>
+        </div>
+        <div className="flex gap-1">
+          {steps.map((s, i) => (
+            <span
+              key={s.label}
+              className={
+                "h-1 flex-1 rounded-full " +
+                (i <= activeIndex ? "bg-primary" : "bg-border")
+              }
+            />
+          ))}
+        </div>
       </div>
-    </div>
+
+      {/* Full, for sm and up */}
+      <ol className="hidden items-center sm:flex">
+        {steps.map((s, i) => {
+          const done = s.state === "done";
+          const active = s.state === "active";
+          return (
+            <li key={s.label} className="flex flex-1 items-center last:flex-none">
+              <div className="flex items-center gap-2">
+                <span
+                  aria-current={active ? "step" : undefined}
+                  className={
+                    "flex size-6 items-center justify-center rounded-full text-xs tabular-nums " +
+                    (done
+                      ? "bg-primary text-primary-foreground"
+                      : active
+                        ? "ring-2 ring-primary text-primary"
+                        : "bg-sunken text-muted-foreground")
+                  }
+                >
+                  {done ? <Check className="size-3.5" /> : i + 1}
+                </span>
+                <span
+                  className={
+                    "text-sm " +
+                    (active
+                      ? "text-foreground"
+                      : done
+                        ? "text-foreground/75"
+                        : "text-muted-foreground")
+                  }
+                >
+                  {s.label}
+                </span>
+              </div>
+              {i < steps.length - 1 && (
+                <span
+                  className={
+                    "mx-3 h-px flex-1 " + (done ? "bg-primary" : "bg-border")
+                  }
+                />
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
   );
 }
