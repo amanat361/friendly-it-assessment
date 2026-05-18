@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Northwind Goods — design tokens.
+   Earthy two-anchor palette: warm clay (primary) + olive (accent).
+   Every component is expected to build from these tokens.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-background: hsl(40 30% 96%);
+  --color-foreground: hsl(28 20% 17%);
+
+  --color-card: hsl(42 40% 99%);
+  --color-card-foreground: hsl(28 20% 17%);
+
+  --color-muted: hsl(38 22% 91%);
+  --color-muted-foreground: hsl(30 10% 42%);
+
+  --color-border: hsl(34 18% 85%);
+  --color-input: hsl(34 18% 80%);
+  --color-ring: hsl(20 40% 40%);
+
+  --color-primary: hsl(19 38% 37%);
+  --color-primary-foreground: hsl(40 40% 97%);
+
+  --color-accent: hsl(74 20% 36%);
+  --color-accent-foreground: hsl(60 30% 97%);
+
+  --color-success: hsl(96 32% 32%);
+  --color-success-foreground: hsl(90 40% 97%);
+
+  --color-warning: hsl(33 78% 55%);
+  --color-warning-foreground: hsl(28 40% 16%);
+
+  --color-destructive: hsl(8 58% 45%);
+  --color-destructive-foreground: hsl(20 40% 97%);
+
+  --radius: 0.625rem;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
