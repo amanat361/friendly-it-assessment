@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { Lock } from "lucide-react";
 import { CartProvider } from "./lib/cart";
 import CartLineItem from "./components/checkout/CartLineItem";
@@ -12,8 +12,28 @@ import SummarySidebar from "./components/checkout/SummarySidebar";
 const flow = [CartLineItem, ShippingMethod, AddressForm];
 
 function Reveal({ i, children }: { i: number; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("reveal-visible");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="reveal" style={{ animationDelay: `${i * 70}ms` }}>
+    <div ref={ref} className="reveal" style={{ animationDelay: `${i * 70}ms` }}>
       {children}
     </div>
   );
@@ -22,7 +42,7 @@ function Reveal({ i, children }: { i: number; children: ReactNode }) {
 function App() {
   return (
     <CartProvider>
-      <div className="min-h-full">
+      <div className="min-h-dvh">
         <header className="sticky top-0 z-30 border-b border-border bg-background/80 backdrop-blur">
           <div className="mx-auto flex max-w-5xl items-center gap-5 px-4 py-3 sm:px-6">
             <div className="min-w-0 flex-1">
@@ -41,14 +61,16 @@ function App() {
         </header>
 
         <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:py-14">
-          <div className="reveal mb-10 max-w-xl">
-            <p className="text-xs font-medium uppercase tracking-widest text-primary">
-              Almost yours
-            </p>
-            <h1 className="mt-2 font-display text-3xl leading-tight text-foreground sm:text-4xl">
-              Review &amp; complete your order
-            </h1>
-          </div>
+          <Reveal i={0}>
+            <div className="mb-10 max-w-xl">
+              <p className="text-xs font-medium uppercase tracking-widest text-primary">
+                Almost yours
+              </p>
+              <h1 className="mt-2 font-display text-3xl leading-tight text-foreground sm:text-4xl">
+                Review &amp; complete your order
+              </h1>
+            </div>
+          </Reveal>
 
           <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
             <div className="space-y-8">

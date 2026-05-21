@@ -34,7 +34,6 @@ export default function AddressForm() {
             id="name"
             name="name"
             type="text"
-            autoFocus
             autoComplete="name"
             placeholder="Jane Doe"
             className={field}
