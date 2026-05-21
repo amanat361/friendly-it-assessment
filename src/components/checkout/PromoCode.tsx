@@ -56,7 +56,6 @@ export default function PromoCode() {
         <input
           id="promo"
           type="text"
-          autoFocus
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder="e.g. SPRING"
