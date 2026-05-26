@@ -5,7 +5,7 @@ const items = [
     id: 1,
     name: "Maple Cutting Board",
     img: "https://images.unsplash.com/photo-1594224457860-02f4f2b1f9b6?w=300&q=80",
-    color: "Natural",
+    color: "green",
     size: 'Large (18")',
     qty: 1,
     price: 64,
